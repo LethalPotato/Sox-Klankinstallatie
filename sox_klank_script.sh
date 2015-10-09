@@ -57,4 +57,40 @@ file="$0"
 mv $file ../lowpass/${file}
 ' {} \;
 
+#Tijd voor distortion/clipping! :)
+
+find . -name "*.wav" -exec sh -c '
+origineel="$0"
+basename=`basename $0 .wav`
+sox --norm $origineel ${basename}_distorted.wav overdrive 20 vol 0.5 trim 0 2 fade 0.1 1.8 0.1
+' {} \;
+
+#wederom een eigen mapje
+
+mkdir ../distorted
+
+find . -name "*_distorted.wav" -exec sh -c '
+file="$0"
+mv $file ../distorted/${file}
+' {} \;
+
+#Tenslotte ga ik nog lekker los. Ik wil de file achterstevoren en 50% naar beneden gepitched. Leek me gaaf.
+
+find . -name "*.wav" -exec sh -c '
+origineel="$0"
+basename=`basename $0 .wav`
+sox --norm $origineel ${basename}_revpitch.wav reverse speed 0.5 trim 0 6 fade 0.1 5.8 0.1
+' {} \;
+
+#En het laatste mapje dat we maken:
+
+mkdir ../revpitch
+
+find . -name "*_revpitch.wav" -exec sh -c '
+file="$0"
+mv $file ../revpitch/${file}
+' {} \;
+
+
+
 
